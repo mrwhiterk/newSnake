@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            canvas {
+                border: 1px solid #d3d3d3;
+                background-color: #f1f1f1;
+            }
+
+            body {
+                background-color: black;
+            }
+
+            #info {
+                color: white;
+            }
+        </style>
+    </head>
+    <body onload="startGame()">
+        <div id="info"></div>
+        <script>
+            var snakeArray = [];
+            var snakeBit;
+            var ctx;
+
+            document.addEventListener("click", function() {
+                myGameArea.reset();
+
+            })
+
+            function startGame() {
+                snakeBit = new snakeBit(0, 0, 50, 50, "blue");
+                myGameArea.start();
+            }
+
+            var myGameArea = {
+                canvas: document.createElement("canvas"),
+                start: function() {
+                    this.canvas.width = 400;
+                    this.canvas.height = 400;
+                    this.context = this.canvas.getContext("2d");
+                    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                    this.interval = setInterval(updateGameArea, 1000);
+                    
+                },
+                clear: function() {
+                    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                },
+                reset: function() {
+                    snakeBit.x = 0;
+                    clearInterval(this.interval);
+                    
+                }
+                
+            }
+
+            function snakeBit(x, y, width, height, color){
+                this.x = x;
+                this.y = y;
+                this.xDir = 50;
+                this.yDir = 0;
+                this.width = width;
+                this.height = height;
+                
+                
+                this.update = function(){
+                    ctx = myGameArea.context;
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height)
+                }
+
+                this.newPos = function() {
+                    var direction = 50;
+                    
+                    window.addEventListener('keyup', (e) => {
+                        console.log(e.keyCode)
+                        if (e.keyCode == 37) {
+                            console.log("left");
+                            xDir = -50;
+                            yDir = 0;
+                        }
+                        else if (e.keyCode == 39) {
+                            console.log("right");
+                            xDir = -50;
+                            yDir = 0;
+                        }
+                        else if (e.keyCode == 38) {
+                            console.log("up");
+                            xDir = -50;
+                            yDir = 0;
+                        }
+                        else if (e.keyCode == 40) {
+                            console.log("down");
+                            xDir = -50;
+                            yDir = 0;
+                        }
+                    })
+                }
+                
+            }
+
+            function updateGameArea() {
+                myGameArea.clear();
+                
+                // if (snakeBit.x + snakeBit.width < myGameArea.canvas.width){
+                //     snakeBit.x += snakeBit.dirX;
+                //     snakeBit.y += snakeBit.dirX;
+                // } else {
+                //     snakeBit.x = 0;
+                // }
+                   
+                snakeBit.newPos();
+                snakeBit.update();
+                //
+                document.getElementById("info").innerHTML = `x: ${snakeBit.x} y: ${snakeBit.y}`;
+            }
+        </script>
+        
+    </body>
+</html>
