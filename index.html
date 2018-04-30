@@ -23,6 +23,9 @@
             var snakeArray = [];
             var snakeBit;
             var ctx;
+            var xDir = 50;
+            var yDir = 0;
+            var speed = 4;
 
             document.addEventListener("click", function() {
                 myGameArea.reset();
@@ -41,7 +44,7 @@
                     this.canvas.height = 400;
                     this.context = this.canvas.getContext("2d");
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                    this.interval = setInterval(updateGameArea, 1000);
+                    this.interval = setInterval(updateGameArea, 1000/speed);
                     
                 },
                 clear: function() {
@@ -58,10 +61,11 @@
             function snakeBit(x, y, width, height, color){
                 this.x = x;
                 this.y = y;
-                this.xDir = 50;
-                this.yDir = 0;
+                // this.xDir = 50;
+                // this.yDir = 50;
                 this.width = width;
                 this.height = height;
+                
                 
                 
                 this.update = function(){
@@ -71,31 +75,35 @@
                 }
 
                 this.newPos = function() {
-                    var direction = 50;
-                    
                     window.addEventListener('keyup', (e) => {
-                        console.log(e.keyCode)
                         if (e.keyCode == 37) {
-                            console.log("left");
                             xDir = -50;
                             yDir = 0;
                         }
                         else if (e.keyCode == 39) {
-                            console.log("right");
-                            xDir = -50;
+                            xDir = 50;
                             yDir = 0;
                         }
                         else if (e.keyCode == 38) {
-                            console.log("up");
-                            xDir = -50;
-                            yDir = 0;
+                            xDir = 0;
+                            yDir = -50;
                         }
-                        else if (e.keyCode == 40) {
-                            console.log("down");
-                            xDir = -50;
-                            yDir = 0;
+                        if (e.keyCode == 40) {
+                            xDir = 0;
+                            yDir = 50;
                         }
                     })
+                    this.x += xDir;
+                    this.y += yDir;
+                    if (this.x + this.width > myGameArea.canvas.width) {
+                        this.x = 0;
+                    } else if (this.y + this.height > myGameArea.canvas.height) {
+                        this.y = 0;
+                    } else if (this.x < 0) {
+                        this.x = myGameArea.canvas.width - this.width;
+                    } else if (this.y < 0) {
+                        this.y = myGameArea.canvas.height - this.height;
+                    }       
                 }
                 
             }
@@ -103,16 +111,10 @@
             function updateGameArea() {
                 myGameArea.clear();
                 
-                // if (snakeBit.x + snakeBit.width < myGameArea.canvas.width){
-                //     snakeBit.x += snakeBit.dirX;
-                //     snakeBit.y += snakeBit.dirX;
-                // } else {
-                //     snakeBit.x = 0;
-                // }
+                
                    
                 snakeBit.newPos();
                 snakeBit.update();
-                //
                 document.getElementById("info").innerHTML = `x: ${snakeBit.x} y: ${snakeBit.y}`;
             }
         </script>
