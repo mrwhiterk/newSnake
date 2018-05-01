@@ -1,9 +1,13 @@
 var snakeArray = [];
 var snakeBit;
+var foodArray = [];
+var food;
 var ctx;
 var xDir = 50;
 var yDir = 0;
-var speed = 4;
+var speed = 2;
+var canvasWidth = 400;
+var canvasHeight = 400;
 
 //remove later
 document.addEventListener("click", function() {
@@ -12,6 +16,11 @@ document.addEventListener("click", function() {
 
 function startGame() {
     snakeBit = new snakeBit(0, 0, 50, 50, "blue");
+    snakeArray.push(snakeBit);
+    for (var i = 0; i < 2; i++){
+        food = new foodMaker(50, 50, "red");
+        foodArray.push(food);
+    }
     myGameArea.start();
 }
 
@@ -38,8 +47,6 @@ var myGameArea = {
 function snakeBit(x, y, width, height, color){
     this.x = x;
     this.y = y;
-    // this.xDir = 50;
-    // this.yDir = 50;
     this.width = width;
     this.height = height;
     this.update = function(){
@@ -69,6 +76,7 @@ function snakeBit(x, y, width, height, color){
         })
         this.x += xDir;
         this.y += yDir;
+        //wall check
         if (this.x + this.width > myGameArea.canvas.width) {
             this.x = 0;
         } else if (this.y + this.height > myGameArea.canvas.height) {
@@ -77,13 +85,14 @@ function snakeBit(x, y, width, height, color){
             this.x = myGameArea.canvas.width - this.width;
         } else if (this.y < 0) {
             this.y = myGameArea.canvas.height - this.height;
-        }       
+            console.log("check up", myGameArea.canvas.height);
+        } 
     }
 }
 
-function foodMaker(x, y, width, height, color) {
-    this.x = x;
-    this.y = y;
+function foodMaker(width, height, color) {
+    this.x = getRandFromList(getAllXPositions(width));
+    this.y = getRandFromList(getAllYPositions(height));
     this.width = width;
     this.height = height;
     this.update = function () {
@@ -91,18 +100,31 @@ function foodMaker(x, y, width, height, color) {
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
+    this.isEaten = false;
+    this.checkEaten = function() {
+         if (snakeBit.x + snakeBit.width > this.x && snakeBit.x < this.x + this.width &&
+        snakeBit.y + snakeBit.height > this.y && snakeBit.y < this.y + this.height) {
+            this.isEaten = true;
+            snakeArray[snakeArray.length - 1].grow();
+        }
+    }    
 }
 
 function updateGameArea() {
     myGameArea.clear();    
     snakeBit.newPos();
     snakeBit.update();
-    document.getElementById("info").innerHTML = `x: ${snakeBit.x} y: ${snakeBit.y}`;
+    foodArray.forEach((x) => {
+        x.checkEaten();
+        if(!x.isEaten) x.update();
+    })
+    
+    document.getElementById("info").innerHTML = `x: ${food.x} y: ${food.y}`;
 }
 
 function getAllXPositions(width){
     var list = [];
-    for (var i = 0; i <= myGameArea.canvas.width - width; i += width) {
+    for (var i = 0; i <= canvasWidth - width; i += width) {
         list.push(i);
     }
     return list;
@@ -110,7 +132,7 @@ function getAllXPositions(width){
 
 function getAllYPositions(height) {
     var list = [];
-    for (var i = 0; i <= myGameArea.canvas.height - height; i += height) {
+    for (var i = 0; i <= canvasHeight - height; i += height) {
         list.push(i);
     }
     return list;
