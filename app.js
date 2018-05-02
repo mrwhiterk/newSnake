@@ -5,27 +5,30 @@ var food;
 var ctx;
 var xDir = 50;
 var yDir = 0;
-var speed = 2;
+var speed = 1;
 var canvasWidth = 400;
 var canvasHeight = 400;
 var previousPosition = {x: 0, y: 0};
+var xx = 0;
+var yy = 0;
 
-//remove later
 document.addEventListener("click", function() {
     myGameArea.reset();
 })
 
 function startGame() {
-    snakeBit = new SnakeBit(0, 0, 50, 50, "blue");
-    snakeArray.push(snakeBit);
-    for (var i = 0; i < 2; i++){
+    snakeArray.push(new SnakeBit(100, 0, 50, 50, "red"));
+    snakeArray.push(new SnakeBit(0, 0, 50, 50, "blue"));
+    snakeArray.push(new SnakeBit(0, 0, 50, 50, "green"));
+    
+    snakeBit = snakeArray[0];
+
+    for (var i = 0; i < 0; i++){
         food = new foodMaker(50, 50, "red");
         foodArray.push(food);
     }
     myGameArea.start();
 }
-
-
 
 var myGameArea = {
     canvas: document.createElement("canvas"),
@@ -35,13 +38,11 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 1000/speed);
-        
     },
     clear: function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     reset: function() {
-        snakeBit.x = 0;
         clearInterval(this.interval);
     }
     
@@ -50,6 +51,7 @@ var myGameArea = {
 function SnakeBit(x, y, width, height, color){
     this.x = x;
     this.y = y;
+    this.color = color;
     this.width = width;
     this.height = height;
     this.update = function(){
@@ -121,40 +123,89 @@ function foodMaker(width, height, color) {
            
             
             
-            console.log(snakeArray);
+            
         }
     }    
 }
 
+
+
 function updateGameArea() {
     myGameArea.clear();
+    console.log(snakeArray);
 
-    var head = {x: snakeBit.x, y: snakeBit.y};
-    // snakeBit.newPos();
-    // snakeBit.update();
+    //var head = {x: snakeBit.x, y: snakeBit.y};
+    
 
-    snakeArray.forEach((snakeBlock, index) => {
-        //var oldPosition = {x: snakeBlock[snakeArray.length-1].x, y: snakeBlock[snakeArray.length-1].y}
-        // if (index != 1){
-            console.log(index);
-            snakeBlock.x = head.x;
-            snakeBlock.y = head.y;
-            console.log('head x and y before', head.x, head.y);
-            snakeBlock.newPos();
-            snakeBlock.update();
-            head.x = snakeBlock.x;
-            head.y = snakeBlock.y;
-            console.log('head x and y after', head.x, head.y);
-        // }
+    // for (var i = snakeArray.length -1; i >= 0; i--)
+    // {
+    //     snakeArray[i].x = head.x;
+    //     snakeArray[i].y = head.y;
+
+    //     snakeArray[i].newPos();
+    //     snakeArray[i].update();
+
+    //     head.x = snakeArray[i].x;
+    //     head.y = snakeArray[i].y;
+    // }
+    var save;
+    
+    console.log(snakeArray);
+    for (var i = 0; i < snakeArray.length; i++){
         
-    })
+
+        //console.log('start', snakeArray[i].x, '   coor ' + xx + " " + yy);/// 1
+        if (i != 0){
+            snakeArray[i].x = snakeArray[i - 1].x;
+            snakeArray[i].y = snakeArray[i - 1].y;
+        } 
+
+        snakeArray[i].newPos();
+        snakeArray[i].update();
+        // if (i == 0) {
+        //     xx = snakeArray[i].x;
+        //     yy = snakeArray[i].y;
+
+        //     snakeArray[i].newPos();
+        //     snakeArray[i].update();
+
+        //     console.log('a', snakeArray[i].x, '   coor ' + xx + " " + yy);/// 2
+
+        // } else {
+            // snakeArray[i].x = xx;
+            // snakeArray[i].y = yy;
+
+            // console.log('b', snakeArray[i].x, '   coor ' + xx + " " + yy);/// 3
+
+
+            // snakeArray[i].newPos();
+            // snakeArray[i].update();
+
+            // console.log('c', snakeArray[i].x, '   coor ' + xx + " " + yy);/// 4
+
+            // xx = snakeArray[i].x;
+            // yy = snakeArray[i].y;
+
+            // console.log("d");
+        //}
+        
+    }
+    // if (snakeArray[0].x > 150) {
+    //     console.log("stu", xx + " " + yy);
+    //     myGameArea.reset();
+    // }
+    
+   
+    
+
+    
 
     foodArray.forEach((x) => {
         x.checkEaten();
         if(!x.isEaten) x.update();
     })
     
-    document.getElementById("info").innerHTML = `x: ${food.x} y: ${food.y}`;
+    //document.getElementById("info").innerHTML = `x: ${food.x} y: ${food.y}`;
 }
 
 function getAllXPositions(width){
