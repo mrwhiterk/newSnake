@@ -2,13 +2,15 @@ var snakeArray = [];
 var snakeBit;
 var foodArray = [];
 var food;
+var foodWidth = 40;
+var foodHeight = 40;
 var foodMovementSpeed = 10;
 var ctx;
 
 var xDir = 50;
 var yDir = 0;
 var snakeHeadDirection = "right";
-var speed = 5;
+var speed = 4;
 
 var canvasWidth = 800;
 var canvasHeight = 800;
@@ -22,7 +24,7 @@ function startGame() {
     snakeBit = snakeArray[0];
 
     for (var i = 0; i < 10; i++){
-        food = new foodMaker(50, 50, "black");
+        food = new foodMaker(foodWidth, foodHeight, "black");
         foodArray.push(food);
     }
     myGameArea.start();
@@ -197,7 +199,7 @@ function foodMaker(width, height, color) {
          if (snakeBit.x + snakeBit.width > this.x && snakeBit.x < this.x + this.width &&
         snakeBit.y + snakeBit.height > this.y && snakeBit.y < this.y + this.height && this.isEaten == false) {
             this.isEaten = true;
-            foodArray.push(new foodMaker(50, 50, "black"));
+            foodArray.push(new foodMaker(foodWidth, foodHeight, "black"));
             snakeArray[snakeArray.length - 1].grow();
 
         }
