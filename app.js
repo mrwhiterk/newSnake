@@ -1,12 +1,14 @@
 var snakeArray = [];
 var snakeBit;
-var snakeHeadDirection;
 var foodArray = [];
 var food;
 var ctx;
+
 var xDir = 50;
 var yDir = 0;
+var snakeHeadDirection = "right";
 var speed = 5;
+
 var canvasWidth = 800;
 var canvasHeight = 800;
 var moves = [];
@@ -15,7 +17,7 @@ var gameMode = 2;
 
 
 function startGame() {
-    snakeArray.push(new SnakeBit(100, 0, 50, 50, "black"));
+    snakeArray.push(new SnakeBit(0, 0, 50, 50, "black"));
     snakeBit = snakeArray[0];
 
     for (var i = 0; i < 2; i++){
@@ -82,6 +84,9 @@ function SnakeBit(x, y, width, height, color){
             yDir = 0;
             snakeHeadDirection = "right";
         };
+
+        
+        
         window.addEventListener('keyup', (e) => {
             if (e.keyCode == 37 && snakeHeadDirection != "right") {
                 left();
