@@ -12,6 +12,8 @@ var yDir = 0;
 var snakeHeadDirection = "right";
 var speed = 4;
 
+var isGameOver = false;
+
 var canvasWidth = 800;
 var canvasHeight = 800;
 var moves = [];
@@ -45,6 +47,10 @@ var myGameArea = {
     },
     reset: function() {
         clearInterval(this.interval);
+        setTimeout(function() {
+            alert("Game Over");
+
+        }, 500);
     }
 }
 
@@ -221,6 +227,8 @@ function updateGameArea() {
     if(snakeBit.touchingSelf()) {
         myGameArea.reset();
     };
+    
+    
 
     for (var i = 1; i < snakeArray.length; i++){
         snakeArray[i].x = moves[moves.length - 2 - i].x;
@@ -239,6 +247,8 @@ function updateGameArea() {
     })
 
     $("#score").text(snakeArray.length - 1);
+
+    
 }
 
 function getAllXPositions(width){
