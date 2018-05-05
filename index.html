@@ -4,21 +4,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             canvas {
-                border: 1px solid black;
+                /* border: 1px solid black; */
                 background-color: #f1f1f1;
             }
 
             body {
                 background-color: #d3d3d3;
             }
-
-            #info {
-                color: white;
-            }
         </style>
     </head>
     <body onload="startGame()">
-        <div id="info"></div>
+        <div id="info">
+            <h1>Score: <span id="score"></span></h1>
+        </div>
+
+        <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
         <script src="app.js"></script>
         
     </body>

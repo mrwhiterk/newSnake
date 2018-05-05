@@ -1,5 +1,6 @@
 var snakeArray = [];
 var snakeBit;
+var snakeHeadDirection;
 var foodArray = [];
 var food;
 var ctx;
@@ -12,9 +13,6 @@ var moves = [];
 var coord = {};
 var gameMode = 2;
 
-document.addEventListener("click", function() {
-    myGameArea.reset();
-})
 
 function startGame() {
     snakeArray.push(new SnakeBit(100, 0, 50, 50, "black"));
@@ -28,6 +26,7 @@ function startGame() {
 }
 
 var myGameArea = {
+    
     canvas: document.createElement("canvas"),
     start: function() {
         this.canvas.width = 800;
@@ -63,22 +62,38 @@ function SnakeBit(x, y, width, height, color){
     }
 
     this.newPos = function() {
+        var left = function(){
+            xDir = -50;
+            yDir = 0;
+            snakeHeadDirection = "left";
+        };
+        var up = function(){
+            xDir = 0;
+            yDir = -50;
+            snakeHeadDirection = "up";
+        };
+        var down = function(){
+            xDir = 0;
+            yDir = 50;
+            snakeHeadDirection = "down";
+        };
+        var right = function(){
+            xDir = 50;
+            yDir = 0;
+            snakeHeadDirection = "right";
+        };
         window.addEventListener('keyup', (e) => {
-            if (e.keyCode == 37) {
-                xDir = -50;
-                yDir = 0;
+            if (e.keyCode == 37 && snakeHeadDirection != "right") {
+                left();
             }
-            else if (e.keyCode == 39) {
-                xDir = 50;
-                yDir = 0;
+            else if (e.keyCode == 39 && snakeHeadDirection != "left") {
+                right();
             }
-            else if (e.keyCode == 38) {
-                xDir = 0;
-                yDir = -50;
+            else if (e.keyCode == 38 && snakeHeadDirection != "down") {
+                up();
             }
-            if (e.keyCode == 40) {
-                xDir = 0;
-                yDir = 50;
+            if (e.keyCode == 40 && snakeHeadDirection != "up") {
+                down();
             }
         })
         this.x += xDir;
@@ -170,6 +185,8 @@ function updateGameArea() {
         food.checkEaten();
         if(!food.isEaten) food.update();
     })
+
+    $("#score").text(snakeArray.length - 1);
 }
 
 function getAllXPositions(width){
