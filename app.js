@@ -2,6 +2,7 @@ var snakeArray = [];
 var snakeBit;
 var foodArray = [];
 var food;
+var foodMovementSpeed = 10;
 var ctx;
 
 var xDir = 50;
@@ -20,7 +21,7 @@ function startGame() {
     snakeArray.push(new SnakeBit(0, 0, 50, 50, "black"));
     snakeBit = snakeArray[0];
 
-    for (var i = 0; i < 2; i++){
+    for (var i = 0; i < 10; i++){
         food = new foodMaker(50, 50, "black");
         foodArray.push(food);
     }
@@ -145,18 +146,51 @@ function foodMaker(width, height, color) {
     this.y = getRandFromList(getAllYPositions(height));
     this.width = width;
     this.height = height;
+    this.setDirection = function(){
+        var dir = Math.random();
+        if (dir < .25) {
+            return "left";
+        } else if (dir < .50) {
+            return "up";
+        } else if (dir < .75) {
+            return "right";
+        } else {
+            return "down";
+        } 
+    };
+    this.direction = this.setDirection();
     this.update = function () {
         ctx = myGameArea.context;
+
         snakeArray.forEach((snakePiece) => {
             while (this.x == snakePiece.x && this.y == snakePiece.y ){
                 this.x = getRandFromList(getAllXPositions(width));
                 this.y = getRandFromList(getAllYPositions(height));
             }
         })
+
+        //create scurrying effect from food
+        if(this.direction == "left") this.x -= foodMovementSpeed;
+        if(this.direction == "up") this.y -= foodMovementSpeed;
+        if(this.direction == "right") this.x += foodMovementSpeed;
+        if(this.direction == "down") this.y += foodMovementSpeed;
+        console.log(this.direction);
+
+
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = "red";
         ctx.fillRect(this.x, this.y, this.width - 4, this.height - 4)
+
+        if (this.x + this.width > myGameArea.canvas.width) {
+            this.x = 0;
+        } else if (this.y + this.height > myGameArea.canvas.height) {
+            this.y = 0;
+        } else if (this.x < 0) {
+            this.x = myGameArea.canvas.width - this.width;
+        } else if (this.y < 0) {
+            this.y = myGameArea.canvas.height - this.height;
+        } 
     }
     this.isEaten = false;
     this.checkEaten = function() {
@@ -194,7 +228,12 @@ function updateGameArea() {
 
     foodArray.forEach((food) => {
         food.checkEaten();
-        if(!food.isEaten) food.update();
+        if(!food.isEaten) {
+            
+            
+            food.update();
+
+        }
     })
 
     $("#score").text(snakeArray.length - 1);
