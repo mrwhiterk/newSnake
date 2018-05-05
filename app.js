@@ -147,6 +147,12 @@ function foodMaker(width, height, color) {
     this.height = height;
     this.update = function () {
         ctx = myGameArea.context;
+        snakeArray.forEach((snakePiece) => {
+            while (this.x == snakePiece.x && this.y == snakePiece.y ){
+                this.x = getRandFromList(getAllXPositions(width));
+                this.y = getRandFromList(getAllYPositions(height));
+            }
+        })
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = "red";
