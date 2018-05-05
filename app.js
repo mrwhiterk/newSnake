@@ -5,14 +5,12 @@ var food;
 var ctx;
 var xDir = 50;
 var yDir = 0;
-var speed = 3;
-var canvasWidth = 400;
-var canvasHeight = 400;
-var previousPosition = {x: 0, y: 0};
-var xx = 0;
-var yy = 0;
+var speed = 5;
+var canvasWidth = 800;
+var canvasHeight = 800;
 var moves = [];
 var coord = {};
+var gameMode = 2;
 
 document.addEventListener("click", function() {
     myGameArea.reset();
@@ -20,12 +18,10 @@ document.addEventListener("click", function() {
 
 function startGame() {
     snakeArray.push(new SnakeBit(100, 0, 50, 50, "black"));
-    
-    
     snakeBit = snakeArray[0];
 
-    for (var i = 0; i < 1; i++){
-        food = new foodMaker(50, 50, "red");
+    for (var i = 0; i < 2; i++){
+        food = new foodMaker(50, 50, "black");
         foodArray.push(food);
     }
     myGameArea.start();
@@ -34,8 +30,8 @@ function startGame() {
 var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function() {
-        this.canvas.width = 400;
-        this.canvas.height = 400;
+        this.canvas.width = 800;
+        this.canvas.height = 800;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 1000/speed);
@@ -46,7 +42,6 @@ var myGameArea = {
     reset: function() {
         clearInterval(this.interval);
     }
-    
 }
 
 function SnakeBit(x, y, width, height, color){
@@ -63,7 +58,7 @@ function SnakeBit(x, y, width, height, color){
         ctx.fillRect(this.x, this.y, this.width - 4, this.height - 4)
     }
     this.grow = function(){
-        var newSnakeBit = new SnakeBit(previousPosition.x, previousPosition.y, 50, 50, 'black');
+        var newSnakeBit = new SnakeBit(0, 0, 50, 50, 'black');
             snakeArray.push(newSnakeBit);
     }
 
@@ -90,15 +85,28 @@ function SnakeBit(x, y, width, height, color){
         this.y += yDir;
 
         //wall check
-        if (this.x + this.width > myGameArea.canvas.width) {
-            this.x = 0;
-        } else if (this.y + this.height > myGameArea.canvas.height) {
-            this.y = 0;
-        } else if (this.x < 0) {
-            this.x = myGameArea.canvas.width - this.width;
-        } else if (this.y < 0) {
-            this.y = myGameArea.canvas.height - this.height;
-        } 
+        if (gameMode == 1) {
+            if (this.x + this.width > myGameArea.canvas.width) {
+                this.x = 0;
+            } else if (this.y + this.height > myGameArea.canvas.height) {
+                this.y = 0;
+            } else if (this.x < 0) {
+                this.x = myGameArea.canvas.width - this.width;
+            } else if (this.y < 0) {
+                this.y = myGameArea.canvas.height - this.height;
+            } 
+        } else {
+            if (this.x + this.width > myGameArea.canvas.width) {
+                myGameArea.reset();
+            } else if (this.y + this.height > myGameArea.canvas.height) {
+                myGameArea.reset();
+            } else if (this.x < 0) {
+                myGameArea.reset();
+            } else if (this.y < 0) {
+                myGameArea.reset();
+            } 
+        }
+        
     }
 
     this.touchingSelf = () => {
@@ -132,10 +140,6 @@ function foodMaker(width, height, color) {
             foodArray.push(new foodMaker(50, 50, "black"));
             snakeArray[snakeArray.length - 1].grow();
 
-           
-            
-            
-            
         }
     }    
 }
@@ -145,29 +149,26 @@ function foodMaker(width, height, color) {
 function updateGameArea() {
     myGameArea.clear();
     
-    snakeBit.newPos();
     snakeBit.update();
-
+    snakeBit.newPos();
+    
+    //save every snake head move to an array
     coord = {x: snakeBit.x, y: snakeBit.y};
     moves.push(coord);
     
     if(snakeBit.touchingSelf()) {
-        console.log(snakeBit.touchingSelf());
         myGameArea.reset();
     };
-    console.log('snake bit ', snakeBit.touchingSelf());
 
     for (var i = 1; i < snakeArray.length; i++){
-        snakeArray[i].x = moves[moves.length - 1 - i].x;
-        snakeArray[i].y = moves[moves.length - 1 - i].y;
+        snakeArray[i].x = moves[moves.length - 2 - i].x;
+        snakeArray[i].y = moves[moves.length - 2 - i].y;
         snakeArray[i].update();
-
-        
     }
 
-    foodArray.forEach((x) => {
-        x.checkEaten();
-        if(!x.isEaten) x.update();
+    foodArray.forEach((food) => {
+        food.checkEaten();
+        if(!food.isEaten) food.update();
     })
 }
 
