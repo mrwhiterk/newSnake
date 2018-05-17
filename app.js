@@ -97,16 +97,16 @@ function SnakeBit(x, y, width, height, color){
         
         
         window.addEventListener('keyup', (e) => {
-            if (e.keyCode == 37 && snakeHeadDirection != "right") {
+            if ((e.keyCode == 65 || e.keyCode == 37) && snakeHeadDirection != "right") {
                 left();
             }
-            else if (e.keyCode == 39 && snakeHeadDirection != "left") {
+            else if ((e.keyCode == 68 || e.keyCode == 39) && snakeHeadDirection != "left") {
                 right();
             }
-            else if (e.keyCode == 38 && snakeHeadDirection != "down") {
+            else if ((e.keyCode == 87 || e.keyCode == 38) && snakeHeadDirection != "down") {
                 up();
             }
-            if (e.keyCode == 40 && snakeHeadDirection != "up") {
+            if ((e.keyCode == 83 || e.keyCode == 40) && snakeHeadDirection != "up") {
                 down();
             }
         })
@@ -182,7 +182,7 @@ function foodMaker(width, height, color) {
         if(this.direction == "up") this.y -= foodMovementSpeed;
         if(this.direction == "right") this.x += foodMovementSpeed;
         if(this.direction == "down") this.y += foodMovementSpeed;
-        console.log(this.direction);
+        
 
 
         ctx.fillStyle = color;
