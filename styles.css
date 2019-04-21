@@ -1,11 +1,14 @@
 canvas {
-    /* border: 1px solid black; */
     background-color: #f1f1f1;
+    transform: scale(0.9);
 }
 
 body {
-    background-color: purple;
+    background-color: black;
+    display: flex;
+    justify-content: space-around;
 }
+
 #title {
     float: right;
     font-size: 6.5em;
@@ -17,11 +20,11 @@ body {
 }
 
 #title h3 {
-    
     padding-bottom: 40px;
     margin-bottom: 50px;
     color: green;
 }
+
 #title p {
     font-family: 'Fruktur', cursive;
     font-size: 40px;
@@ -36,6 +39,7 @@ body {
     font-size: 2em;
     color: green;
 }
+
 /* font-family: 'Bungee Shade', cursive;
 font-family: 'Fruktur', cursive;
 font-family: 'Black Ops One', cursive; */
